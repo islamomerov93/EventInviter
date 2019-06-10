@@ -13,6 +13,11 @@ namespace EventInviter.EF
         public EventInviterDbContext(DbContextOptions<EventInviterDbContext> options) : base(options) { }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Event> Events { get; set; }
-        public virtual DbSet<InvitedUser> InvitedUsers { get; set; }
+        public virtual DbSet<EventInvitedUser> InvitedUsers { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EventInvitedUser>()
+                .HasKey(c => new { c.UserId, c.EventId });
+        }
     }
 }

@@ -8,15 +8,15 @@ using test.Models;
 
 namespace test.Controllers
 {
-    public class InvitedUserController:Controller
+    public class EventInvitedUserController:Controller
     {
         private readonly EventInviterDbContext context;
-        public InvitedUserController(EventInviterDbContext context)
+        public EventInvitedUserController(EventInviterDbContext context)
         {
             this.context = context;
         }
         [HttpPost]
-        public ActionResult<int> AddUserToEvent([FromBody]InvitedUser IU)
+        public ActionResult<int> InviteUserToEvent([FromBody]EventInvitedUser IU)
         {
             if (ModelState.IsValid)
             {
@@ -27,12 +27,22 @@ namespace test.Controllers
             return BadRequest();
         }
         [HttpGet]
-        public ActionResult<ICollection<InvitedUser>> GetInvitedUsersByEventName(string Name)
+        public ActionResult<ICollection<EventInvitedUser>> GetInvitedUsersByEventName(string Name)
         {
             return context.InvitedUsers.Where(x => x.Event.Name == Name).ToList();
         }
         [HttpGet]
-        public ActionResult<ICollection<InvitedUser>> GetUserInvitedEventsByUserId(int Id)
+        public ActionResult<ICollection<EventInvitedUser>> GetInvitedAndRejectedUsersByEventName(string Name)
+        {
+            return context.InvitedUsers.Where(x => x.Event.Name == Name & x.UserAcceptOrReject == false).ToList();
+        }
+        [HttpGet]
+        public ActionResult<ICollection<EventInvitedUser>> GetInvitedAndAcceptedUsersByEventName(string Name)
+        {
+            return context.InvitedUsers.Where(x => x.Event.Name == Name & x.UserAcceptOrReject == true).ToList();
+        }
+        [HttpGet]
+        public ActionResult<ICollection<EventInvitedUser>> GetUserInvitedEventsByUserId(int Id)
         {
             return context.InvitedUsers.Where(x => x.User.Id == Id).ToList();
         }

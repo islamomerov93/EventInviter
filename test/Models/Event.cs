@@ -13,11 +13,11 @@ namespace test.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        [StringLength(500,MinimumLength = 1)]
+        [StringLength(4000,MinimumLength = 1)]
         [Column(TypeName = "nvarchar(max)")]
         public string Name { get; set; }
         [Required]
-        [StringLength(500, MinimumLength = 1)]
+        [StringLength(100000, MinimumLength = 1)]
         [Column(TypeName = "text")]
         public string Description { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
