@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace test.Migrations
 {
     [DbContext(typeof(EventInviterDbContext))]
-    [Migration("20190610140304_init")]
+    [Migration("20190610175419_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,9 @@ namespace test.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
@@ -51,16 +54,14 @@ namespace test.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasMaxLength(100000);
 
-                    b.Property<DateTime>("LastDateForParticipationSubmission")
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<DateTime>("LastDateForParticipationSubmission");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -92,7 +93,7 @@ namespace test.Migrations
 
                     b.HasKey("UserId", "EventId");
 
-                    b.HasAlternateKey("EventId", "UserId");
+                    b.HasIndex("EventId");
 
                     b.ToTable("InvitedUsers");
                 });

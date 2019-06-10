@@ -18,6 +18,9 @@ namespace EventInviter.EF
         {
             modelBuilder.Entity<EventInvitedUser>()
                 .HasKey(c => new { c.UserId, c.EventId });
+            modelBuilder.Entity<User>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
         }
     }
 }

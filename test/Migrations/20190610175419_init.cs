@@ -59,7 +59,6 @@ namespace test.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InvitedUsers", x => new { x.UserId, x.EventId });
-                    table.UniqueConstraint("AK_InvitedUsers_EventId_UserId", x => new { x.EventId, x.UserId });
                     table.ForeignKey(
                         name: "FK_InvitedUsers_Events_EventId",
                         column: x => x.EventId,
@@ -78,6 +77,17 @@ namespace test.Migrations
                 name: "IX_Events_UserId",
                 table: "Events",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvitedUsers_EventId",
+                table: "InvitedUsers",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -1,5 +1,6 @@
 ﻿using EventInviter.EF;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +33,17 @@ namespace test.Controllers
         [HttpGet]
         public ActionResult<List<Event>> GetAllEvents()
         {
+            return context.Events.ToList();
+        }
+        [HttpGet]
+        public ActionResult<List<Event>> GetAllUpcomingEvents()
+        {
             return (context.Events.Where(x => x.StartDate > DateTime.Now)).ToList();
         }
         [HttpGet]
         public ActionResult<List<Event>> GetAllEventsCreatedByUser(int UserId)
         {
-            return (context.Events.Where(x => x.User.Id > UserId)).ToList();
+            return (context.Events.Where(x => x.User.Id == (UserId+1))).ToList();
         }
         [HttpGet]
         public ActionResult<Event> GetEventByName(string EventName)
@@ -47,8 +53,9 @@ namespace test.Controllers
         [HttpPut]
         public ActionResult<string> EditEventName(string EventName, string ChangedName)
         {
-            Event e = (Event)context.Events.FirstOrDefault(x => x.Name == EventName);
+            Event e = context.Events.FirstOrDefault(x => x.Name == EventName);
             e.Name = ChangedName;
+            context.Entry(e).State = EntityState.Modified;
             context.SaveChanges();
             return e.Name;
         }

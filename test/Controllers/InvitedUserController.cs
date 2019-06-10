@@ -8,6 +8,7 @@ using test.Models;
 
 namespace test.Controllers
 {
+    [Route("api/[controller]/[action]")]
     public class EventInvitedUserController:Controller
     {
         private readonly EventInviterDbContext context;

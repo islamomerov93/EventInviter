@@ -20,12 +20,10 @@ namespace test.Models
         [StringLength(100000, MinimumLength = 1)]
         [Column(TypeName = "text")]
         public string Description { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
         [Required]
         public DateTime StartDate { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime LastDateForParticipationSubmission { get; set; }
-        public User User { get; set; }
+        public DateTime LastDateForParticipationSubmission { get; set; } = DateTime.Now;
+        public virtual User User { get; set; }
     }
 }
