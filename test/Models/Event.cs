@@ -1,7 +1,5 @@
 ﻿using EventInviter.Models;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,5 +23,6 @@ namespace test.Models
         public DateTime StartDate { get; set; }
         public DateTime LastDateForParticipationSubmission { get; set; } = DateTime.Now;
         public virtual User User { get; set; }
+
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using test.Models;
 
 namespace test.Controllers
@@ -33,39 +32,56 @@ namespace test.Controllers
         [HttpGet]
         public ActionResult<List<Event>> GetAllEvents()
         {
-            return context.Events.ToList();
+            var events = context.Events.ToList();
+            if (events.Count > 0) return events; 
+            return NotFound("There is not any event");
         }
         [HttpGet]
         public ActionResult<List<Event>> GetAllUpcomingEvents()
         {
-            return (context.Events.Where(x => x.StartDate > DateTime.Now)).ToList();
+            var events = (context.Events.Where(x => x.StartDate > DateTime.Now)).ToList();
+            if (events.Count > 0) return events; 
+            return NotFound("There is not any upcoming event");
         }
         [HttpGet]
         public ActionResult<List<Event>> GetAllEventsCreatedByUser(int UserId)
         {
-            return (context.Events.Where(x => x.User.Id == (UserId+1))).ToList();
+            var events = (context.Events.Where(x => x.User.Id == UserId)).ToList();
+            if (events.Count > 0) return events; 
+            return NotFound("There is not any event created by this user id");
         }
         [HttpGet]
-        public ActionResult<Event> GetEventByName(string EventName)
+        public ActionResult<Event> GetEventById(int Id)
         {
-            return (Event)context.Events.FirstOrDefault(x => x.Name == EventName);
+            var e = (Event)context.Events.FirstOrDefault(x => x.Id == Id);
+            if (e != null) return e;
+            return NotFound("There is not any event in this id");
         }
         [HttpPut]
-        public ActionResult<string> EditEventName(string EventName, string ChangedName)
+        public ActionResult<string> EditEventName(int Id, string ChangedName)
         {
-            Event e = context.Events.FirstOrDefault(x => x.Name == EventName);
-            e.Name = ChangedName;
-            context.Entry(e).State = EntityState.Modified;
-            context.SaveChanges();
-            return e.Name;
+            Event e = context.Events.FirstOrDefault(x => x.Id == Id);
+            if (e != null)
+            {
+                e.Name = ChangedName;
+                context.Entry(e).State = EntityState.Modified;
+                context.SaveChanges();
+                return e.Name;
+            }
+            return NotFound("There is not any event in this id");
         }
         [HttpPut]
-        public ActionResult<string> EditEventDescription(string EventDescription, string ChangedDescription)
+        public ActionResult<string> EditEventDescription(int Id, string ChangedDescription)
         {
-            Event e = (Event)context.Events.FirstOrDefault(x => x.Description == EventDescription);
-            e.Name = ChangedDescription;
-            context.SaveChanges();
-            return e.Description;
+            Event e = context.Events.FirstOrDefault(x => x.Id == Id);
+            if (e != null)
+            {
+                e.Name = ChangedDescription;
+                context.Entry(e).State = EntityState.Modified;
+                context.SaveChanges();
+                return e.Name;
+            }
+            return NotFound("There is not any event in this id");
         }
     }
 }

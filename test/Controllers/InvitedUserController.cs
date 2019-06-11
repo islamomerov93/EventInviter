@@ -1,9 +1,8 @@
 ﻿using EventInviter.EF;
+using EventInviter.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using test.Models;
 
 namespace test.Controllers
@@ -28,24 +27,53 @@ namespace test.Controllers
             return BadRequest();
         }
         [HttpGet]
-        public ActionResult<ICollection<EventInvitedUser>> GetInvitedUsersByEventName(string Name)
+        public ActionResult<ICollection<User>> GetInvitedUsersByEventId(int Id)
         {
-            return context.InvitedUsers.Where(x => x.Event.Name == Name).ToList();
+            var iu = context.InvitedUsers.Where(x => x.Event.Id == Id).ToList();
+            if (iu.Count > 0)
+            {
+                var users = from invitedUser in iu
+                            join User in context.Users on invitedUser.UserId equals User.Id
+                            select User;
+                if (users.Count() > 0) return users.ToList(); 
+                return NotFound("There is not any user invited to this event");
+            }
+            return NotFound("There is not any event in this event id");
         }
         [HttpGet]
-        public ActionResult<ICollection<EventInvitedUser>> GetInvitedAndRejectedUsersByEventName(string Name)
+        public ActionResult<ICollection<User>> GetInvitedAndRejectedUsersByEventId(int Id)
         {
-            return context.InvitedUsers.Where(x => x.Event.Name == Name & x.UserAcceptOrReject == false).ToList();
+            var iu = context.InvitedUsers.Where(x => x.Event.Id == Id & x.UserAcceptOrReject == false).ToList();
+            if (iu.Count > 0)
+            {
+                var users = from invitedUser in iu
+                            join User in context.Users on invitedUser.UserId equals User.Id
+                            select User;
+                if (users.Count() > 0) return users.ToList();
+                return NotFound("There is not any rejected user for this event");
+            }
+            return NotFound("There is not any event for this event id");
         }
         [HttpGet]
-        public ActionResult<ICollection<EventInvitedUser>> GetInvitedAndAcceptedUsersByEventName(string Name)
+        public ActionResult<ICollection<User>> GetInvitedAndAcceptedUsersByEventId(int id)
         {
-            return context.InvitedUsers.Where(x => x.Event.Name == Name & x.UserAcceptOrReject == true).ToList();
+            var iu = context.InvitedUsers.Where(x => x.Event.Id == id & x.UserAcceptOrReject == true).ToList();
+            if (iu.Count > 0)
+            {
+                var users = from invitedUser in iu
+                            join User in context.Users on invitedUser.UserId equals User.Id
+                            select User;
+                if (users.Count() > 0) return users.ToList();
+                return NotFound("There is not any rejected user for this event");
+            }
+            return NotFound("There is not any event for this event id");
         }
         [HttpGet]
         public ActionResult<ICollection<EventInvitedUser>> GetUserInvitedEventsByUserId(int Id)
         {
-            return context.InvitedUsers.Where(x => x.User.Id == Id).ToList();
+            var iu = context.InvitedUsers.Where(x => x.User.Id == Id).ToList();
+            if (iu.Count > 0) return iu; 
+            return NotFound("There is not any event for user id");
         }
     }
 }
